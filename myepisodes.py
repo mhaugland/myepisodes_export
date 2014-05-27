@@ -53,18 +53,16 @@ class MyEpisodes(object):
 
     def get_show_list(self):
         # Populate shows with the list of show_ids in our account
-        wasted_url = "%s/%s" % (MYEPISODE_URL, "life_wasted.php")
-        data = self.send_req(wasted_url)
+        shows_url = "%s/%s" % (MYEPISODE_URL, "shows.php?type=manage")
+        data = self.send_req(shows_url)
         if data is None:
             return False
         soup = BeautifulSoup(data)
-        mylist = soup.find("table", {"class": "mylist"})
-        mylist_tr = mylist.findAll("tr")[1:-1]
-        for row in mylist_tr:
-            link = row.find('a', {'href': True})
-            showid = urlparse.parse_qs(link.get('href'))['showid'][0]
+        mylist = soup.findAll("option")
+        for row in mylist:
+            showid = row['value']
             self.shows.append(int(showid))
-            self.show_list.append({'id': int(showid), 'name': link.string})
+            self.show_list.append({'id': int(showid), 'name': row.text})
         return True
 
     def get_show_data(self, show_id):
