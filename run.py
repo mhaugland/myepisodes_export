@@ -52,12 +52,13 @@ for show in me.show_list:
         "title": tvdb_data['seriesname'],
         "episodes": collection_episodes
     }
-    status = trakt_req('show/episode/library', trakt_data)
+    if collection_episodes:
+        status = trakt_req('show/episode/library', trakt_data)
 
-    if(status['status'] == 'success'):
-        print "OK - Updated catalogue of %s - %s" % (tvdb_data['seriesname'], status['message'])
-    else:
-        print "FAIL - Could not update catalogue of %s - %s" % (tvdb_data['seriesname'], status['message'])
+        if(status['status'] == 'success'):
+            print "OK - Updated catalogue of %s - %s" % (tvdb_data['seriesname'], status['message'])
+        else:
+            print "FAIL - Could not update catalogue of %s - %s" % (tvdb_data['seriesname'], status['message'])
 
 
     seen_episodes = me.get_seen_episodes(show["id"])
@@ -69,12 +70,13 @@ for show in me.show_list:
         "title": tvdb_data['seriesname'],
         "episodes": seen_episodes
     }
-    status = trakt_req('show/episode/seen', trakt_data)
-
-    if(status['status'] == 'success'):
-        print "OK - Updated seen status of %s - %s" % (tvdb_data['seriesname'], status['message'])
-    else:
-        print "FAIL - Could not update seen status of %s - %s" % (tvdb_data['seriesname'], status['message'])
+    if seen_episodes:
+        status = trakt_req('show/episode/seen', trakt_data)
+    
+        if(status['status'] == 'success'):
+            print "OK - Updated seen status of %s - %s" % (tvdb_data['seriesname'], status['message'])
+        else:
+            print "FAIL - Could not update seen status of %s - %s" % (tvdb_data['seriesname'], status['message'])
 
 trakt_data = {
     "username": TRAKT_USER,
